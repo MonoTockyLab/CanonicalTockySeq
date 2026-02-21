@@ -84,6 +84,7 @@ If you use the **CanonicalTockySeq** package or any of its components in a scien
   note = {R package version 0.0.1},
   url = {[https://github.com/MonoTockyLab/CanonicalTockySeq](https://github.com/MonoTockyLab/CanonicalTockySeq)}
 }
+```
 
 ### License
 
