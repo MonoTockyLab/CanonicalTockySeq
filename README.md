@@ -52,13 +52,13 @@ The **CanonicalTockySeq** framework provides a robust methodology for capturing 
 
 ## Availability
 
-* **CanonicalTockySeq** is available at GitHub: [CanonicalTockySeq](https://www.google.com/search?q=https://github.com/MonoTockyLab/CanonicalTockySeq).
+* **CanonicalTockySeq** is available at GitHub: [CanonicalTockySeq](https://github.com/MonoTockyLab/CanonicalTockySeq).
 
 ## Package Documentation
 
 The **CanonicalTockySeq** package documentation is available online:
 
-* **Website**: [https://MonoTockyLab.github.io/CanonicalTockySeq/](https://www.google.com/search?q=https://MonoTockyLab.github.io/CanonicalTockySeq/)
+* **Website**: [https://MonoTockyLab.github.io/CanonicalTockySeq/](https://MonoTockyLab.github.io/CanonicalTockySeq)
 
 ## Copyright and Citation Guidelines
 

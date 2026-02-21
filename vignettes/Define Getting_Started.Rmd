@@ -1,0 +1,124 @@
+---
+title: "Getting Started with CanonicalTockySeq"
+author: "Masahiro Ono"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with CanonicalTockySeq}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(CanonicalTockySeq)
+
+```
+
+## Introduction
+
+**CanonicalTockySeq** utilizes a supervised Canonical Redundancy Analysis (RDA) to construct a transcriptomic manifold with conical geometry. This vignette demonstrates the core workflow: generating the canonical space, projecting cells via piecewise SLERP, and analyzing temporal gene dynamics.
+
+## 1. Simulating Toy Data
+
+To demonstrate the workflow, we will first generate a synthetic single-cell dataset.
+
+The `CanonicalTockySeq` function requires two inputs:
+
+* 
+**`X`**: A numeric matrix of gene expression (Genes x Cells).
+
+
+* 
+**`Z`**: A numeric matrix of explanatory variables (Genes x Signatures), typically representing Tocky-specific gene signatures like Blue, Blue-Red, and Red.
+
+
+
+```{r simulate-data}
+set.seed(2026)
+
+# Define dimensions
+n_genes <- 100
+n_cells <- 500
+
+# 1. Simulate the Constraint Matrix Z (100 Genes x 3 Signatures)
+Z <- matrix(runif(n_genes * 3), nrow = n_genes, ncol = 3)
+colnames(Z) <- c("Blue", "BlueRed", "Red")
+rownames(Z) <- paste0("Gene_", 1:n_genes)
+
+# 2. Simulate the Expression Matrix X (100 Genes x 500 Cells)
+# We multiply Z by random cell loadings to embed the biological trajectory, 
+# then add some statistical noise.
+cell_loadings <- matrix(runif(3 * n_cells), nrow = 3, ncol = n_cells)
+X <- Z %*% cell_loadings + matrix(rnorm(n_genes * n_cells, sd = 0.5), nrow = n_genes)
+colnames(X) <- paste0("Cell_", 1:n_cells)
+rownames(X) <- rownames(Z)
+
+```
+
+## 2. Canonical Redundancy Analysis (RDA)
+
+Now we apply the RDA architecture to our simulated data, treating genes as "sites" and cells as "species" constrained by the Tocky stages.
+
+```{r run-rda}
+# Perform the RDA procedure
+tocky_res <- CanonicalTockySeq(X = X, Z = Z)
+
+# The result contains cell_scores and biplot vectors representing the constraints
+head(tocky_res$cell_scores)
+
+```
+
+## 3. Manifold Reconstruction via SLERP
+
+To resolve the temporal gradient, we project the cells onto a piecewise Spherical Linear Interpolation (SLERP) manifold. We define the landmarks based on the biplot vectors from our RDA.
+
+```{r run-slerp}
+# Extract landmark vectors from the RDA biplot
+landmark_B  <- tocky_res$biplot["Blue", ]
+landmark_BR <- tocky_res$biplot["BlueRed", ]
+landmark_R  <- tocky_res$biplot["Red", ]
+
+# Calculate Tocky Time (Angle) and Tocky Intensity (Radial norm)
+gradient_res <- GradientTockySeq(
+  res = tocky_res, 
+  B = landmark_B, 
+  BR = landmark_BR, 
+  R = landmark_R, 
+  filter_negative = TRUE
+)
+
+head(gradient_res)
+
+```
+
+## 4. Visualizing the Conical Manifold
+
+We can now visualize the constrained ordination space. The `plotCanonicalTocky` function displays the axes alongside a continuous gradient legend for Tocky Time.
+
+```{r plot-manifold, fig.width=8, fig.height=4}
+plotCanonicalTocky(tocky_res, gradient_res, alpha_level = 0.5)
+
+```
+
+## 5. Identifying Gene Dynamics
+
+With the continuous temporal gradient established, we can rapidly filter for genes that vary significantly along the Tocky Time axis.
+
+```{r gene-dynamics}
+# Filter for top dynamic genes
+dynamic_genes <- SelectTockyGenes(
+  expression_data = X, 
+  gradient_res = gradient_res, 
+  top_n = 5
+)
+
+# Plot the expression dynamics of the top gene using LOESS smoothing
+plotGeneDynamics(
+  expression_data = X, 
+  gradient_res = gradient_res, 
+  gene = dynamic_genes[1], 
+  span = 0.8
+)
+
+```
