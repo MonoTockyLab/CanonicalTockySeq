@@ -1,0 +1,31 @@
+# --- R Specific ---
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+.Rapp.history
+*-Ex.R
+
+# --- Large Single-Cell Data ---
+# Explicitly ignore common data formats to prevent accidental push
+*.rds
+*.Rdata
+*.rda
+*.h5
+*.h5ad
+
+# --- Package Build Artifacts ---
+# These are generated locally; the source code is what matters
+src/*.o
+src/*.so
+src/*.dll
+docs/
+# Note: Keep 'docs/' if using GitHub Pages, otherwise ignore local builds
+
+# --- System Specific ---
+.DS_Store
+Thumbs.db
+
+# --- Development ---
+.Rproj
+.Rbuildignore
