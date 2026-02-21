@@ -1,15 +1,11 @@
 # CanonicalTockySeq: Canonical Tocky Analysis for Temporal Gradient on a Transcriptomic Manifold
 
 <a href="[https://monotockylab.github.io/CanonicalTockySeq/](https://www.google.com/search?q=https://monotockylab.github.io/CanonicalTockySeq/)">
-<img src="man/figures/CanonicalTockySeqLogo.jpg" align="left" width=50%>
+<img src="man/figures/CanonicalTockySeq.jpg" align="left" width=100%>
 </a>
 
 
-<a href="[https://monotockylab.github.io/CanonicalTockySeq/](https://www.google.com/search?q=https://monotockylab.github.io/CanonicalTockySeq/)">
-<img src="man/figures/CanonicalTockySeqNautilus.jpg" align="right" width=50%>
-</a>
-
-**Author:** Dr. Masahiro Ono
+**Author:** Dr Masahiro Ono
 
 **Date:** 21 February 2026
 

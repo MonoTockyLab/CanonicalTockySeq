@@ -1,57 +1,20 @@
 url: https://MonoTockyLab.github.io/CanonicalTockySeq
-title: "CanonicalTockySeq"
 
 authors:
   Masahiro Ono:
     href: https://monotockylab.github.io/
-
+    
 template:
   bootstrap: 5
   params:
     google_analytics: "G-VJHT0Y5RYF"
     google_site_verification: Pj4WWF5m9cqCcPqkGG75BI1_593zXImuFRpI8TnAous
 
-# The navbar keeps things organized.
-# Once you add vignettes, 'articles' will automatically link to them.
 navbar:
-  title: "CanonicalTockySeq"
-  left:
-    - icon: fa-home
-      href: index.html
-    - text: "Reference"
-      href: reference/index.html
-    - text: "Articles"
-      href: articles/index.html
-    - text: "News"
-      href: news/index.html
-  right:
-    - icon: fa-github
-      href: https://github.com/MonoTockyLab/CanonicalTockySeq
-
-# This is the most important part for your users!
-# It groups your R functions by their biological/computational roles.
-reference:
-  - title: "Canonical Manifold Construction"
-    [cite_start]desc: "Supervised RDA architecture to define the conical geometry[cite: 45, 173]."
-    contents:
-      - CanonicalTockySeq
-      - plotCanonicalTocky
-  - title: "Geodesic Trajectory Analysis"
-    [cite_start]desc: "Methods for GradientTockySeq and piecewise SLERP interpolation."
-    contents:
-      - GradientTockySeq
-      - fast_slerp
-      - get_best_t_for_cell
-      - get_norm
-  - title: "Gene Dynamics and Temporal Cascades"
-    [cite_start]desc: "Tools to identify and visualize gene-expression dynamics[cite: 83, 206]."
-    contents:
-      - SelectTockyGenes
-      - RunTradeSeqTocky
-      - PlotTockyHeatmap
-      - plotGeneDynamics
-
-footer:
+  title: CanonicalTockySeq
   structure:
-    [cite_start]left:  "Developed by Masahiro Ono[cite: 267]."
-    right: "© 2026 MonoTockyLab."
+    left: [home, reference, articles, news]
+    right: [github, search]
+    
+footer:
+  text: "© 2026 Masahiro Ono"
