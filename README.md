@@ -1,7 +1,7 @@
 # CanonicalTockySeq: Canonical Tocky Analysis for Temporal Gradient on a Transcriptomic Manifold
 
-<a href="[https://monotockylab.github.io/CanonicalTockySeq/](https://www.google.com/search?q=https://monotockylab.github.io/CanonicalTockySeq/)">
-<img src="man/figures/CanonicalTockySeq.jpg" align="left" width=100%>
+<a href="https://github.com/MonoTockyLab/CanonicalTockySeq">
+<img src="man/figures/CanonicalTockySeq.jpg" align="center" width=100%>
 </a>
 
 
@@ -86,6 +86,11 @@ If you use the **CanonicalTockySeq** package or any of its components in a scien
 }
 ```
 
+<a href="https://monotockylab.github.io/tocky/">
+<img src="man/figures/TockyToki.jpg" align="left" width=40%>
+</a>
+
+
 ### License
 
 **Apache License 2.0**: The CanonicalTockySeq package is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at:
@@ -126,6 +131,10 @@ Dr. Ono is **the creator and developer of Tocky**. He innovated the transgenic a
 In 2008, Dr. Ono initiated his pioneering transition from molecular immunology to becoming an **Integrated Experimental and Computational Immunologist**, demonstrating his visionary leadership and pioneering spirit in the development and application of multidimensional analysis and computational methods to address experimental and immunological problems. Tocky represents one of the fusion technologies that Dr. Ono has both created and developed.
 
 Tocky employs the Fluorescent Timer protein to analyze the temporal dynamics of cell activities and development *in vivo*. His lab integrates molecular biology, immunology, and computational analysis to develop novel research tools, thereby enhancing the understanding of immune cell biology.
+
+
+
+
 
 ## Contact and More
 
