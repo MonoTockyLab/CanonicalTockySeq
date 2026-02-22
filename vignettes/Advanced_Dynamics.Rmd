@@ -22,28 +22,52 @@ Once the **Canonical Tocky Manifold** is constructed and cells are assigned a pr
 This vignette demonstrates how to use `RunTradeSeqTocky` to fit Generalized Additive Models (GAMs) and `PlotTockyHeatmap` to identify transcriptional cascades.
 
 ## 1. Establishing the Base Manifold
-We will simulate a dataset, ensuring the expression matrix represents non-negative integer counts, and assign the cells to two biological conditions (WT and KO).
+To demonstrate the power of `CanonicalTockySeq` and `tradeSeq`, we will simulate a dataset with a true underlying biological structure:
+* **Continuous Temporal Cascades:** 100 genes are mathematically engineered to peak sequentially along the developmental trajectory.
+* **Condition Effects:** We simulate a biological knockout (KO) where cells have a 50% reduction in expressing the 'Late' stage genes compared to Wild-Type (WT).
 
 ```{r simulate-and-build}
-set.seed(123)
-n_genes <- 500  # Increased from 100 to generate a richer dataset
+set.seed(2026)
+n_genes <- 500
 n_cells <- 300
 
-# 1. Simulate Constraints
-Z <- matrix(runif(n_genes * 3), nrow = n_genes, ncol = 3)
-colnames(Z) <- c("Blue", "BlueRed", "Red")
-rownames(Z) <- paste0("Gene_", 1:n_genes)
-
-# 2. Simulate Expression as Non-Negative Counts
-cell_loadings <- matrix(runif(3 * n_cells), nrow = 3, ncol = n_cells)
-X <- round(Z %*% cell_loadings * 10 + matrix(rnorm(n_genes * n_cells, sd = 2), nrow = n_genes))
-X[X < 0] <- 0 
-colnames(X) <- paste0("Cell_", 1:n_cells)
-rownames(X) <- rownames(Z)
-
-# 3. Assign Two Conditions (WT and KO)
+# 1. Assign true developmental time and groups to cells
+true_time <- runif(n_cells, 0, pi/2)
 cell_groups <- sample(c("WT", "KO"), n_cells, replace = TRUE)
-names(cell_groups) <- colnames(X)
+names(cell_groups) <- paste0("Cell_", 1:n_cells)
+
+# 2. Engineer Continuous Temporal Cascades for Top 100 Genes
+# We use a Gaussian function so each gene peaks sequentially along the trajectory
+gene_peaks <- seq(0, pi/2, length.out = 100)
+X_signal <- matrix(0, nrow = 100, ncol = n_cells)
+for(i in 1:100) {
+  X_signal[i, ] <- exp( - (true_time - gene_peaks[i])^2 / 0.1) * 20
+}
+
+# Add 400 random noise genes
+X_noise <- matrix(runif(400 * n_cells, 0, 2), nrow = 400, ncol = n_cells)
+X_base <- rbind(X_signal, X_noise)
+
+# Simulate a biological knockout effect: KO cells fail to fully upregulate 'Late' genes
+ko_idx <- which(cell_groups == "KO")
+X_base[70:100, ko_idx] <- X_base[70:100, ko_idx] * 0.5
+
+# Format as non-negative counts for tradeSeq
+X <- round(X_base + matrix(rnorm(n_genes * n_cells, sd = 1), nrow = n_genes))
+X[X < 0] <- 0
+colnames(X) <- names(cell_groups)
+rownames(X) <- paste0("Gene_", 1:n_genes)
+
+# 3. Create Gene Constraints (Z) matching the biological landmarks
+# Blue (New) peaks at t=0, BlueRed (Persistent) at t=pi/4, Red (Arrested) at t=pi/2
+all_gene_peaks <- c(gene_peaks, runif(400, 0, pi/2))
+Z <- matrix(0, nrow = n_genes, ncol = 3)
+colnames(Z) <- c("Blue", "BlueRed", "Red")
+rownames(Z) <- rownames(X)
+
+Z[, "Blue"]    <- exp( - (all_gene_peaks - 0)^2 / 0.2 )
+Z[, "BlueRed"] <- exp( - (all_gene_peaks - pi/4)^2 / 0.2 )
+Z[, "Red"]     <- exp( - (all_gene_peaks - pi/2)^2 / 0.2 )
 
 # 4. Reconstruct Manifold
 tocky_res <- CanonicalTockySeq(X = X, Z = Z)

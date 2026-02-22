@@ -17,48 +17,63 @@ library(CanonicalTockySeq)
 
 ## Introduction
 
-**CanonicalTockySeq** utilizes a supervised Canonical Redundancy Analysis (RDA) to construct a transcriptomic manifold with conical geometry. This vignette demonstrates the core workflow: generating the canonical space, projecting cells via piecewise SLERP, and analyzing temporal gene dynamics.
+**CanonicalTockySeq** utilizes a supervised Canonical Redundancy Analysis (RDA) to construct a transcriptomic manifold with conical geometry. By anchoring single-cell expression data to known developmental landmarks, it allows researchers to accurately trace continuous *in vivo* trajectories.
 
-## 1. Simulating Toy Data
+This vignette demonstrates the core workflow: simulating a structured transcriptomic manifold, generating the canonical space, projecting cells via piecewise SLERP, and visualizing the resulting trajectory.
 
-To demonstrate the workflow, we will first generate a synthetic single-cell dataset.
+## 1. Simulating a Transcriptomic Manifold
+
+To demonstrate the workflow, we will generate a synthetic single-cell dataset with a true underlying biological structure. We engineer continuous temporal cascades using Gaussian functions so that genes peak sequentially along a developmental trajectory, mirroring real biological differentiation.
 
 The `CanonicalTockySeq` function requires two inputs:
 
-* 
-**`X`**: A numeric matrix of gene expression (Genes x Cells).
-
-
-* 
-**`Z`**: A numeric matrix of explanatory variables (Genes x Signatures), typically representing Tocky-specific gene signatures like Blue, Blue-Red, and Red.
-
-
+* **`X`**: A numeric matrix of gene expression (Genes x Cells).
+* **`Z`**: A numeric matrix of explanatory variables (Genes x Signatures), representing Tocky-specific landmark signatures.
 
 ```{r simulate-data}
 set.seed(2026)
 
-# Define dimensions
-n_genes <- 100
-n_cells <- 500
+n_genes <- 500
+n_cells <- 300
 
-# 1. Simulate the Constraint Matrix Z (100 Genes x 3 Signatures)
-Z <- matrix(runif(n_genes * 3), nrow = n_genes, ncol = 3)
+# 1. Assign true developmental time to cells
+true_time <- runif(n_cells, 0, pi/2)
+cell_names <- paste0("Cell_", 1:n_cells)
+
+# 2. Engineer Continuous Temporal Cascades for Top 100 Genes
+# We use a Gaussian function so each gene peaks sequentially along the trajectory
+gene_peaks <- seq(0, pi/2, length.out = 100)
+X_signal <- matrix(0, nrow = 100, ncol = n_cells)
+for(i in 1:100) {
+  X_signal[i, ] <- exp( - (true_time - gene_peaks[i])^2 / 0.1) * 20
+}
+
+# Add 400 random noise genes to mimic background transcription
+X_noise <- matrix(runif(400 * n_cells, 0, 2), nrow = 400, ncol = n_cells)
+X_base <- rbind(X_signal, X_noise)
+
+# Add statistical noise and format as non-negative counts
+X <- round(X_base + matrix(rnorm(n_genes * n_cells, sd = 1), nrow = n_genes))
+X[X < 0] <- 0
+colnames(X) <- cell_names
+rownames(X) <- paste0("Gene_", 1:n_genes)
+
+# 3. Create Gene Constraints (Z) matching the biological landmarks
+# Blue (New) peaks at t=0, BlueRed (Persistent) at t=pi/4, Red (Arrested) at t=pi/2
+all_gene_peaks <- c(gene_peaks, runif(400, 0, pi/2))
+Z <- matrix(0, nrow = n_genes, ncol = 3)
 colnames(Z) <- c("Blue", "BlueRed", "Red")
-rownames(Z) <- paste0("Gene_", 1:n_genes)
+rownames(Z) <- rownames(X)
 
-# 2. Simulate the Expression Matrix X (100 Genes x 500 Cells)
-# We multiply Z by random cell loadings to embed the biological trajectory, 
-# then add some statistical noise.
-cell_loadings <- matrix(runif(3 * n_cells), nrow = 3, ncol = n_cells)
-X <- Z %*% cell_loadings + matrix(rnorm(n_genes * n_cells, sd = 0.5), nrow = n_genes)
-colnames(X) <- paste0("Cell_", 1:n_cells)
-rownames(X) <- rownames(Z)
+Z[, "Blue"]    <- exp( - (all_gene_peaks - 0)^2 / 0.2 )
+Z[, "BlueRed"] <- exp( - (all_gene_peaks - pi/4)^2 / 0.2 )
+Z[, "Red"]     <- exp( - (all_gene_peaks - pi/2)^2 / 0.2 )
 
 ```
 
 ## 2. Canonical Redundancy Analysis (RDA)
 
-Now we apply the RDA architecture to our simulated data, treating genes as "sites" and cells as "species" constrained by the Tocky stages.
+Now we apply the RDA architecture to our structured data, treating genes as "sites" and cells as "species" constrained by the Tocky stages.
 
 ```{r run-rda}
 # Perform the RDA procedure
@@ -71,7 +86,7 @@ head(tocky_res$cell_scores)
 
 ## 3. Manifold Reconstruction via SLERP
 
-To resolve the temporal gradient, we project the cells onto a piecewise Spherical Linear Interpolation (SLERP) manifold. We define the landmarks based on the biplot vectors from our RDA.
+To resolve the temporal gradient, we project the cells onto a piecewise Spherical Linear Interpolation (SLERP) manifold. We define the landmarks based on the biplot vectors extracted directly from our RDA.
 
 ```{r run-slerp}
 # Extract landmark vectors from the RDA biplot
@@ -94,16 +109,16 @@ head(gradient_res)
 
 ## 4. Visualizing the Conical Manifold
 
-We can now visualize the constrained ordination space. The `plotCanonicalTocky` function displays the axes alongside a continuous gradient legend for Tocky Time.
+We can now visualize the constrained ordination space. Notice how the simulated temporal cascades naturally form a sweeping, continuous biological trajectory. The `plotCanonicalTocky` function displays the axes alongside a continuous gradient legend for Tocky Time.
 
-```{r plot-manifold, fig.width=8, fig.height=4}
+```{r plot-manifold, fig.width=9, fig.height=4.5}
 plotCanonicalTocky(tocky_res, gradient_res, alpha_level = 0.5)
 
 ```
 
 ## 5. Identifying Gene Dynamics
 
-With the continuous temporal gradient established, we can rapidly filter for genes that vary significantly along the Tocky Time axis.
+With the continuous temporal gradient established along our arched manifold, we can rapidly filter for genes that vary significantly along the Tocky Time axis.
 
 ```{r gene-dynamics}
 # Filter for top dynamic genes
@@ -113,7 +128,7 @@ dynamic_genes <- SelectTockyGenes(
   top_n = 5
 )
 
-# Plot the expression dynamics of the top gene using LOESS smoothing
+# Plot the expression dynamics of a top gene using LOESS smoothing
 plotGeneDynamics(
   expression_data = X, 
   gradient_res = gradient_res, 
@@ -122,3 +137,4 @@ plotGeneDynamics(
 )
 
 ```
+---
