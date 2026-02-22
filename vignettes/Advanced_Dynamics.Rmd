@@ -1,0 +1,120 @@
+---
+title: "Advanced Dynamics and Temporal Cascades"
+author: "Masahiro Ono"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Advanced Dynamics and Temporal Cascades}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(CanonicalTockySeq)
+
+```
+
+## Introduction
+
+Once the **Canonical Tocky Manifold** is constructed and cells are assigned a precise continuous coordinate (Tocky Time), the next crucial step is determining which genes significantly alter their expression along this developmental trajectory.
+
+This vignette demonstrates how to use `RunTradeSeqTocky` to fit Generalized Additive Models (GAMs) and `PlotTockyHeatmap` to identify transcriptional cascades.
+
+## 1. Establishing the Base Manifold
+We will simulate a dataset, ensuring the expression matrix represents non-negative integer counts, and assign the cells to two biological conditions (WT and KO).
+
+```{r simulate-and-build}
+set.seed(123)
+n_genes <- 500  # Increased from 100 to generate a richer dataset
+n_cells <- 300
+
+# 1. Simulate Constraints
+Z <- matrix(runif(n_genes * 3), nrow = n_genes, ncol = 3)
+colnames(Z) <- c("Blue", "BlueRed", "Red")
+rownames(Z) <- paste0("Gene_", 1:n_genes)
+
+# 2. Simulate Expression as Non-Negative Counts
+cell_loadings <- matrix(runif(3 * n_cells), nrow = 3, ncol = n_cells)
+X <- round(Z %*% cell_loadings * 10 + matrix(rnorm(n_genes * n_cells, sd = 2), nrow = n_genes))
+X[X < 0] <- 0 
+colnames(X) <- paste0("Cell_", 1:n_cells)
+rownames(X) <- rownames(Z)
+
+# 3. Assign Two Conditions (WT and KO)
+cell_groups <- sample(c("WT", "KO"), n_cells, replace = TRUE)
+names(cell_groups) <- colnames(X)
+
+# 4. Reconstruct Manifold
+tocky_res <- CanonicalTockySeq(X = X, Z = Z)
+gradient_res <- GradientTockySeq(
+  res = tocky_res, 
+  B = tocky_res$biplot["Blue",], 
+  BR = tocky_res$biplot["BlueRed",], 
+  R = tocky_res$biplot["Red",]
+)
+```
+
+## 2. Rapid Pre-filtering of Dynamic Genes
+
+Fitting GAMs to tens of thousands of genes is computationally intensive. The `SelectTockyGenes` function provides a rapid linear spline regression filter to isolate the most dynamically varying genes along the Tocky Time axis.
+
+```{r pre-filter}
+# Select the top 100 most dynamic genes for a highly impressive cascade
+dynamic_genes <- SelectTockyGenes(
+  expression_data = X, 
+  gradient_res = gradient_res, 
+  top_n = 100, 
+  min_expr = 0.05
+)
+
+```
+
+## 3. Differential Dynamics using tradeSeq
+The `RunTradeSeqTocky` wrapper interfaces directly with the `tradeSeq` package to fit GAMs. It evaluates expression against the 0-90 degree Tocky Time. 
+
+By providing a named vector with two conditions (WT and KO), `tradeSeq` will test for genes that have significantly different dynamic trajectories between the two groups.
+
+```{r run-tradeseq}
+# Fit GAMs and perform statistical testing between WT and KO
+tradeSeq_res <- RunTradeSeqTocky(
+  object = X,
+  gradient_res = gradient_res,
+  group_by = cell_groups,
+  genes = dynamic_genes,
+  n_knots = 5,
+  n_cores = 1
+)
+
+# View the differential dynamics results (p-values and FDR)
+head(tradeSeq_res$results)
+```
+
+## 4. Visualizing the Temporal Cascade
+
+Once significant genes are identified, plotting them in developmental order reveals the sequential transcriptional logic of your system.
+
+The `PlotTockyHeatmap` function supports ordering genes by their peak activation timing ("peak") or via standard hierarchical clustering ("cluster"). By default, it applies a Z-score row scaling to highlight expression shifts.
+
+```{r plot-cascade, fig.width=7, fig.height=5}
+# Plot the expression cascade, ordered by the peak Tocky Time
+PlotTockyHeatmap(
+  object = X,
+  gradient_res = gradient_res,
+  genes = dynamic_genes,
+  ordering_method = "peak",
+  n_bins = 50,
+  span = 0.5
+)
+
+```
+
+## 5. Biological Interpretation
+
+The heatmap above visualizes the transcriptional cascade along the Canonical Tocky Manifold. 
+
+* **The X-axis (Tocky Time):** Represents the progression of cells from the 'New' state to the 'Arrested' state, decoupled from the absolute signaling intensity.
+* **The Y-axis (Genes):** Displays the top 100 most dynamic genes, ordered sequentially by their peak expression timing.
+* **The Diagonal Pattern:** A smooth, continuous diagonal band indicates a highly coordinated developmental program where genes are activated and silenced in a strict temporal order.
+
+By integrating `CanonicalTockySeq` with `tradeSeq`, you can isolate these specific temporal windows, identifying the immediate-early genes that initiate differentiation versus the late-stage markers associated with terminal states.
