@@ -5,6 +5,9 @@
 
 [![DOI](https://zenodo.org/badge/1163623467.svg)](https://doi.org/10.5281/zenodo.19003235)
 
+
+[![bioRxiv](https://img.shields.io/badge/bioRxiv-2026.03.10.710825-b31b1b.svg)](https://www.biorxiv.org/content/10.64898/2026.03.10.710825v1)
+
 <a href="https://github.com/MonoTockyLab/CanonicalTockySeq">
 <a href="https://monotockylab.github.io/CanonicalTockySeq/index.html">
 <img src="man/figures/CanonicalTockySeq.jpg" align="center" width="100%">
@@ -76,9 +79,23 @@ The **CanonicalTockySeq** package documentation is available online:
 If you use `CanonicalTockySeq` in your research, please cite the relevant publication and the R package.
 
 You can cite the specific release of this software via its Zenodo DOI: 
+
 [![DOI](https://zenodo.org/badge/1163623467.svg)](https://doi.org/10.5281/zenodo.19003235)
 
 ### bioRxiv preprint
+
+For a detailed description of the biological applications and the underlying methodology of **CanonicalTockySeq**, please refer to our preprint:
+
+
+[![bioRxiv](https://img.shields.io/badge/bioRxiv-2026.03.10.710825-b31b1b.svg)](https://www.biorxiv.org/content/10.64898/2026.03.10.710825v1)
+
+> **Temporal Mechanisms of T-Cell Fate Decisions under Immune Checkpoint Blockade Resolved by CanonicalTockySeq**. 
+> Jehanne Hassan, Omnia Reda, Nobuko Irie, Malin Pedersen, Shane Foo, Lizzie Appleton, Il-mi Okazaki, Taku Okazaki, Yorifumi Satou, Kevin Harrington, Alan Melcher, Masahiro Ono.
+> *bioRxiv* (2026). DOI: [10.64898/2026.03.10.710825](https://doi.org/10.64898/2026.03.10.710825)  
+
+[📄 Read the preprint on bioRxiv](https://www.biorxiv.org/content/10.64898/2026.03.10.710825v1)
+
+
 
 ```bibtex
 @article{Ono2026CanonicalTocky,
@@ -95,13 +112,16 @@ You can cite the specific release of this software via its Zenodo DOI:
 
 ### R package
 
+[![DOI](https://zenodo.org/badge/1163623467.svg)](https://doi.org/10.5281/zenodo.19003235)
+
 ```bibtex
 @Manual{OnoCanonicalTockySeq,
   title = {CanonicalTockySeq: Canonical Tocky Analysis for Temporal Gradient on a Transcriptomic Manifold},
   author = {Masahiro Ono},
   year = {2026},
   note = {R package version 0.1.0},
-  url = {https://github.com/MonoTockyLab/CanonicalTockySeq}
+  url = {[https://github.com/MonoTockyLab/CanonicalTockySeq](https://github.com/MonoTockyLab/CanonicalTockySeq)},
+  doi = {10.5281/zenodo.19003235}
 }
 ```
 
