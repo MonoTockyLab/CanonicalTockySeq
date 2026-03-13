@@ -1,8 +1,13 @@
 # CanonicalTockySeq: Canonical Tocky Analysis for Temporal Gradient on a Transcriptomic Manifold
 
+
+[![Documentation](https://img.shields.io/badge/docs-GitHub_Pages-blue.svg)](https://monotockylab.github.io/CanonicalTockySeq/index.html)
+
 <a href="https://github.com/MonoTockyLab/CanonicalTockySeq">
-<img src="man/figures/CanonicalTockySeq.jpg" align="center" width=100%>
+<a href="https://monotockylab.github.io/CanonicalTockySeq/index.html">
+<img src="man/figures/CanonicalTockySeq.jpg" align="center" width="100%">
 </a>
+
 
 
 **Author:** Dr Masahiro Ono
@@ -41,6 +46,13 @@ The **CanonicalTockySeq** framework provides a robust methodology for capturing 
 * Maps cells to a 0–90° **Tocky Time** coordinate (angle) and a normalized **Tocky Intensity** (magnitude).
 
 
+<a href="https://monotockylab.github.io/CanonicalTockySeq/index.html">
+<img src="man/figures/CanonicalTockySeq.jpg" align="center" width="80%">
+</a>
+
+
+
+
 #### **Temporal Cascade Analysis**
 * Orders genes by their peak activation timing to reveal sequential transcriptional programs.
 
@@ -55,7 +67,7 @@ The **CanonicalTockySeq** framework provides a robust methodology for capturing 
 
 The **CanonicalTockySeq** package documentation is available online:
 
-* **Website**: [https://MonoTockyLab.github.io/CanonicalTockySeq/](https://MonoTockyLab.github.io/CanonicalTockySeq)
+* **Website**: [https://monotockylab.github.io/CanonicalTockySeq/index.html](https://monotockylab.github.io/CanonicalTockySeq/index.html)
 
 ## Citation
 
