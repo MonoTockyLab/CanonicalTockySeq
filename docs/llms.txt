@@ -2,6 +2,8 @@
 
 [![Documentation](https://img.shields.io/badge/docs-GitHub_Pages-blue.svg)](https://monotockylab.github.io/CanonicalTockySeq/index.html)
 
+[![DOI](https://zenodo.org/badge/1163623467.svg)](https://doi.org/10.5281/zenodo.19003235)
+
 [](https://github.com/MonoTockyLab/CanonicalTockySeq)
 [![](reference/figures/CanonicalTockySeq.jpg)](https://monotockylab.github.io/CanonicalTockySeq/index.html)
 
@@ -80,6 +82,9 @@ The **CanonicalTockySeq** package documentation is available online:
 
 If you use `CanonicalTockySeq` in your research, please cite the
 relevant publication and the R package.
+
+You can cite the specific release of this software via its Zenodo DOI:
+[![DOI](https://zenodo.org/badge/1163623467.svg)](https://doi.org/10.5281/zenodo.19003235)
 
 ### bioRxiv preprint
 
