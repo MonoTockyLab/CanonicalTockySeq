@@ -32,3 +32,5 @@ renv/local/
 .env
 .secret
 config.yml
+/doc/
+/Meta/

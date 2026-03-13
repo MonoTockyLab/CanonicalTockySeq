@@ -98,7 +98,7 @@ relevant publication and the R package.
   title = {CanonicalTockySeq: Canonical Tocky Analysis for Temporal Gradient on a Transcriptomic Manifold},
   author = {Masahiro Ono},
   year = {2026},
-  note = {R package version 0.1.0.9000},
+  note = {R package version 0.1.0},
   url = {https://github.com/MonoTockyLab/CanonicalTockySeq}
 }
 ```

@@ -1,6 +1,6 @@
 # Changelog
 
-## CanonicalTockySeq 0.1.0.900
+## CanonicalTockySeq 0.1.0
 
 - **Initial Public Release**: Beta release of the CanonicalTockySeq
   framework for single-cell transcriptomic manifold analysis.
