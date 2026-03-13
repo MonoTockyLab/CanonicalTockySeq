@@ -1,0 +1,31 @@
+citHeader("To cite CanonicalTockySeq in publications use:")
+
+bibentry(
+  bibtype = "Article",
+  title = "Temporal Mechanisms of T-Cell Fate Decisions under Immune Checkpoint Blockade Resolved by CanonicalTockySeq",
+  author = c(
+    person("Jehanne", "Hassan"),
+    person("Omnia", "Reda"),
+    person("Nobuko", "Irie"),
+    person("Malin", "Pedersen"),
+    person("Shane", "Foo"),
+    person("Lizzie", "Appleton"),
+    person("Il-mi", "Okazaki"),
+    person("Taku", "Okazaki"),
+    person("Yorifumi", "Satou"),
+    person("Kevin", "Harrington"),
+    person("Alan", "Melcher"),
+    person("Masahiro", "Ono")
+  ),
+  year = "2026",
+  journal = "bioRxiv",
+  note = "Preprint",
+  doi = "10.64898/2026.03.10.710825",
+  url = "https://www.biorxiv.org/content/10.64898/2026.03.10.710825",
+  textVersion = paste(
+    "Hassan, J., Reda, O., Irie, N., Pedersen, M., Foo, S., Appleton, L.,",
+    "Okazaki, I., Okazaki, T., Satou, Y., Harrington, K., Melcher, A., & Ono, M. (2026).",
+    "Temporal Mechanisms of T-Cell Fate Decisions under Immune Checkpoint Blockade",
+    "Resolved by CanonicalTockySeq. bioRxiv. doi:10.64898/2026.03.10.710825."
+  )
+)

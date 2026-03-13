@@ -23,7 +23,6 @@
 RunTradeSeqTocky <- function(object, gradient_res, group_by, genes,
                              n_knots = 5, n_cores = 1) {
   
-  # 1. Input Validation & Data Extraction
   if (!requireNamespace("tradeSeq", quietly = TRUE)) {
     stop("Package 'tradeSeq' is required. Please install it.")
   }
@@ -57,7 +56,6 @@ RunTradeSeqTocky <- function(object, gradient_res, group_by, genes,
     }
   }
   
-  # Handle Gradient Input
   if (is.data.frame(gradient_res)) {
     if (!"angle" %in% colnames(gradient_res)) stop("gradient_res must contain '$angle'.")
     tocky_vals <- gradient_res$angle
@@ -66,21 +64,19 @@ RunTradeSeqTocky <- function(object, gradient_res, group_by, genes,
     tocky_vals <- gradient_res
   }
 
-  # 2. Data Alignment (Intersection)
   common_cells <- intersect(colnames(counts_mat), names(tocky_vals))
   common_cells <- intersect(common_cells, names(group_vec))
   
   if (length(common_cells) == 0) stop("No common cells found between expression, gradient, and groups.")
   
-  # Subset and Filter NAs (Timer Negative)
-  tocky_subset <- tocky_vals[common_cells]
-  valid_idx <- !is.na(tocky_subset)
+    tocky_subset <- tocky_vals[common_cells]
+    group_subset <- group_vec[common_cells]
+    valid_idx <- !is.na(tocky_subset) & !is.na(group_subset)
   
   if (sum(valid_idx) < 10) stop("Fewer than 10 valid (Timer Positive) cells remain. Cannot run GAM.")
   
   final_cells <- common_cells[valid_idx]
   
-  # Final Data Objects
   valid_genes <- intersect(genes, rownames(counts_mat))
   if(length(valid_genes) < length(genes)) {
     warning(paste("Dropped", length(genes) - length(valid_genes), "genes not found in expression matrix."))
@@ -93,7 +89,6 @@ RunTradeSeqTocky <- function(object, gradient_res, group_by, genes,
   cat(sprintf("Running tradeSeq on %d genes across %d cells (%d groups)...\n",
               nrow(y_counts), ncol(y_counts), length(levels(f_groups))))
 
-  # 3. Format for tradeSeq
   pseudotime_mat <- matrix(t_time, ncol = 1)
   rownames(pseudotime_mat) <- final_cells
   colnames(pseudotime_mat) <- "Lineage1"
@@ -102,7 +97,6 @@ RunTradeSeqTocky <- function(object, gradient_res, group_by, genes,
   rownames(weights_mat) <- final_cells
   colnames(weights_mat) <- "Lineage1"
   
-  # 4. Run fitGAM
   if (n_cores > 1) {
     if (.Platform$OS.type == "windows") {
       bpparam <- BiocParallel::SnowParam(workers = n_cores)
@@ -115,7 +109,6 @@ RunTradeSeqTocky <- function(object, gradient_res, group_by, genes,
     parallel_flag <- FALSE
   }
   
-  # Run fitGAM
   gam_fit <- tradeSeq::fitGAM(counts = y_counts,
                               pseudotime = pseudotime_mat,
                               cellWeights = weights_mat,
@@ -158,7 +151,6 @@ RunTradeSeqTocky <- function(object, gradient_res, group_by, genes,
 #' @export
 SelectTockyGenes <- function(expression_data, gradient_res, top_n = 2000, min_expr = 0.05) {
   
-  # 1. Flexible Input Handling
   if (is.data.frame(gradient_res)) {
     if (!"angle" %in% colnames(gradient_res)) stop("gradient_res data frame must contain an 'angle' column.")
     tocky_time <- gradient_res$angle
@@ -171,7 +163,6 @@ SelectTockyGenes <- function(expression_data, gradient_res, top_n = 2000, min_ex
     stop("Package 'splines' is required for this function.")
   }
   
-  # 2. Match Cells & Remove NAs
   common_cells <- intersect(colnames(expression_data), names(tocky_time))
   
   if(length(common_cells) < 10) {
@@ -190,7 +181,6 @@ SelectTockyGenes <- function(expression_data, gradient_res, top_n = 2000, min_ex
   
    sub_expr <- expression_data[, valid_cells]
   
-  # 3.  Abundance Filter
   n_cells <- length(valid_cells)
   
   if (inherits(sub_expr, "sparseMatrix")) {
@@ -208,7 +198,6 @@ SelectTockyGenes <- function(expression_data, gradient_res, top_n = 2000, min_ex
   cat(sprintf("  Initial screen: %d genes passed expression threshold (%.1f%%).\n",
               length(valid_genes), min_expr*100))
   
-  # 4. Fast Dynamic Score Loop
   cat(sprintf("  Scoring dynamics for %d genes...\n", length(valid_genes)))
   
   time_basis <- splines::ns(sub_time, df = 3)
@@ -223,7 +212,6 @@ SelectTockyGenes <- function(expression_data, gradient_res, top_n = 2000, min_ex
   
   scores <- vapply(valid_genes, get_score, numeric(1))
   
-  # 5. Select Top Genes
   scores[is.na(scores)] <- 0
   sorted_genes <- names(sort(scores, decreasing = TRUE))
   

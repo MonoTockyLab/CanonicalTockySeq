@@ -1,12 +1,14 @@
 Package: CanonicalTockySeq
 Title: Canonical Tocky Analysis for Temporal Gradient on a Transcriptomic Manifold
-Version: 0.0.1
+Version: 0.1.0.9000
 Authors@R: person("Masahiro", "Ono", email = "monotockylab@gmail.com", role = c("aut", "cre"), comment = c(ORCID="0000-0002-9284-7326"))
-Description: Implements 'CanonicalTockySeq' to resolve in vivo temporal dynamics by anchoring single-cell RNA-seq data to Tocky Fluorescent Timer landmark populations. The package utilizes a supervised Canonical Redundancy Analysis (RDA) architecture to construct a transcriptomic manifold with conical geometry. It features 'GradientTockySeq' for trajectory reconstruction using piecewise Spherical Linear Interpolation (SLERP) to rigorously decouple developmental time (geodesic angle) from signaling intensity (radial magnitude).
+Description: Implements 'CanonicalTockySeq' to resolve in vivo temporal dynamics by anchoring single-cell RNA-seq data to Tocky Fluorescent Timer landmark populations. The package utilizes a supervised Canonical Redundancy Analysis (RDA) architecture to construct a transcriptomic manifold with conical geometry. It features 'GradientTockySeq' for trajectory reconstruction using piecewise Spherical Linear Interpolation (SLERP) to rigorously decouple signaling time (geodesic angle) from signaling intensity (radial magnitude).
 Depends: R (>= 4.2.0)
 Imports: BiocParallel, irlba, Matrix, pheatmap, tradeSeq, Seurat, methods
+Suggests: knitr, rmarkdown
 License: file LICENSE
 URL: https://MonoTockyLab.github.io/CanonicalTockySeq, https://github.com/MonoTockyLab/CanonicalTockySeq
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+VignetteBuilder: knitr

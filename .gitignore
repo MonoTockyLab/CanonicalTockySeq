@@ -1,31 +1,34 @@
-# --- R Specific ---
+# --- macOS System Files ---
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# --- R & RStudio Core ---
 .Rhistory
 .RData
 .Ruserdata
 .Rproj.user/
-.Rapp.history
-*-Ex.R
-
-# --- Large Single-Cell Data ---
-# Explicitly ignore common data formats to prevent accidental push
-*.rds
-*.Rdata
-*.rda
-*.h5
-*.h5ad
-
-# --- Package Build Artifacts ---
-# These are generated locally; the source code is what matters
-src/*.o
-src/*.so
-src/*.dll
-docs/
-# Note: Keep 'docs/' if using GitHub Pages, otherwise ignore local builds
-
-# --- System Specific ---
-.DS_Store
-Thumbs.db
-
-# --- Development ---
 .Rproj
-.Rbuildignore
+.Rapp.history
+.Rmd_checkpoints/
+
+# --- Build & Check Outputs ---
+.Rcheck/
+*.tar.gz
+*.log
+*.out
+*.Rd
+*.so
+*.dll
+
+# --- Dependencies & Environment ---
+packrat/
+renv/library/
+renv/local/
+.httr-oauth
+.env
+.secret
+config.yml

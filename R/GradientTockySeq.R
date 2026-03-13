@@ -19,17 +19,15 @@
 #' @importFrom stats optimize
 
 GradientTockySeq <- function(res, B, BR, R, filter_negative = TRUE) {
-  
-  cell_mat <- as.matrix(res$cell_scores[, 1:3])
+  n <- length(B)
+  cell_mat <- as.matrix(res$cell_scores[, 1:n])
   n_cells <- nrow(cell_mat)
   
-  # 1. Timer Negative Detection
   is_timer_neg <- rep(FALSE, n_cells)
   if (filter_negative) {
     is_timer_neg <- (cell_mat %*% B < 0) & (cell_mat %*% BR < 0) & (cell_mat %*% R < 0)
   }
 
-  # 2. Setup Slerp Constants
   norm_B <- get_norm(B); unit_B <- B / norm_B
   norm_BR <- get_norm(BR); unit_BR <- BR / norm_BR
   norm_R <- get_norm(R); unit_R <- R / norm_R
@@ -37,7 +35,6 @@ GradientTockySeq <- function(res, B, BR, R, filter_negative = TRUE) {
   omega1 <- acos(pmax(pmin(sum(unit_B * unit_BR), 1), -1))
   omega2 <- acos(pmax(pmin(sum(unit_BR * unit_R), 1), -1))
 
-  # 3. Mapping
   t_values <- rep(NA, n_cells)
   sim_values <- rep(NA, n_cells)
   valid_idx <- which(!is_timer_neg)
@@ -50,7 +47,6 @@ GradientTockySeq <- function(res, B, BR, R, filter_negative = TRUE) {
     sim_values[valid_idx] <- subset_res["sim", ]
   }
 
-  # 4. Normalization
   cell_norms <- sqrt(rowSums(cell_mat^2))
   expected_mags <- sapply(t_values, function(t) {
     if (is.na(t)) return(NA)

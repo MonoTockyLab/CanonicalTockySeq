@@ -7,7 +7,7 @@
 
 **Author:** Dr Masahiro Ono
 
-**Date:** 21 February 2026
+**Date:** 13 March 2026
 
 ## Introduction
 
@@ -44,10 +44,7 @@ The **CanonicalTockySeq** framework provides a robust methodology for capturing 
 #### **Temporal Cascade Analysis**
 * Orders genes by their peak activation timing to reveal sequential transcriptional programs.
 
-
 * Facilitates the identification of immediate-early committers, intermediate effectors, and terminal exhaustion markers.
-
-
 
 
 ## Availability
@@ -60,79 +57,72 @@ The **CanonicalTockySeq** package documentation is available online:
 
 * **Website**: [https://MonoTockyLab.github.io/CanonicalTockySeq/](https://MonoTockyLab.github.io/CanonicalTockySeq)
 
-## Copyright and Citation Guidelines
+## Citation
 
-### Copyright
+If you use `CanonicalTockySeq` in your research, please cite the relevant publication and the R package.
 
-All code and original graphical content within the CanonicalTockySeq package, including anime-like characters and logos, are copyrighted by [Masahiro Ono](https://monotockylab.github.io/). A patent application related to the methodologies employed within this package has been filed and is pending. The intellectual property is held under Imperial College London and Masahiro Ono.
-
-### Usage
-
-The CanonicalTockySeq code is available on GitHub and is intended for public viewing, verification, and use related to the associated academic publication. For permissions or inquiries beyond the scope of the license, please contact: <a href="mailto:m.ono@imperial.ac.uk">m.ono@imperial.ac.uk</a>.
-
-### Citing CanonicalTockySeq
-
-If you use the **CanonicalTockySeq** package or any of its components in a scientific publication or in any other public work, please cite the GitHub repository for now. (This section will be updated with specific paper details once published).
-
-**BibTeX Entry:**
+### bioRxiv preprint
 
 ```bibtex
-@Manual{OnoCanonicalTockySeq,
-  title = {CanonicalTockySeq: Canonical Redundancy Analysis for Tocky Differentiation Trajectories},
-  author = {Masahiro Ono},
+@article{Ono2026CanonicalTocky,
+  author = {Ono, Masahiro and others},
+  title = {Temporal Mechanisms of T-Cell Fate Decisions under Immune Checkpoint Blockade Resolved by CanonicalTockySeq},
+  elocation-id = {2026.03.10.710825},
   year = {2026},
-  note = {R package version 0.0.1},
-  url = {[https://github.com/MonoTockyLab/CanonicalTockySeq](https://github.com/MonoTockyLab/CanonicalTockySeq)}
+  doi = {10.64898/2026.03.10.710825},
+  publisher = {Cold Spring Harbor Laboratory},
+  journal = {bioRxiv},
+  url = {https://www.biorxiv.org/content/10.64898/2026.03.10.710825v1}
 }
 ```
 
-<a href="https://monotockylab.github.io/tocky/">
-<img src="man/figures/TockyToki.jpg" align="left" width=40%>
-</a>
+### R package
 
+```bibtex
+@Manual{OnoCanonicalTockySeq,
+  title = {CanonicalTockySeq: Canonical Tocky Analysis for Temporal Gradient on a Transcriptomic Manifold},
+  author = {Masahiro Ono},
+  year = {2026},
+  note = {R package version 0.1.0.9000},
+  url = {https://github.com/MonoTockyLab/CanonicalTockySeq}
+}
+```
 
-### License
+## License
 
-**Apache License 2.0**: The CanonicalTockySeq package is licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at:
+`CanonicalTockySeq` is licensed under the Apache License 2.0. See the `LICENSE` file for details.
 
-[http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+## Copyright and intellectual property
 
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+Copyright © Masahiro Ono.
 
-### Warranty
+Original graphical content in this repository, including characters and logos, is protected by copyright unless otherwise stated.
 
-This software is distributed WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+A patent application relating to aspects of the methodology has been filed.
 
-#### Why Citation Is Important
+## Contact
 
-Citing software you've used is crucial for acknowledging contributions and ensuring reproducibility, which are critical for scientific progress.
+For questions about the package, please contact: [m.ono@imperial.ac.uk](mailto:m.ono@imperial.ac.uk)
 
-* Giving credit to the developers and researchers who have contributed to the tools you utilize respects and acknowledges their intellectual contributions.
-* Proper citations allow other researchers to access the same tools and versions, thus replicating and verifying your scientific results.
-
-Citations are integral to the scientific ecosystem; they help trace the evolution of ideas and enable others to build upon existing research.
-
-We kindly remind our users that **citing software is as important as citing academic articles in maintaining the integrity of the scientific record.**
-
-#### Further Resources
-
-For additional guidance on citation practices and maintaining research integrity, we recommend visiting the [Committee on Publication Ethics (COPE)](https://publicationethics.org/), which offers valuable resources and support for adhering to ethical practices in scholarly publishing.
 
 ## The Ono Lab (MonoTockyLab)
 
 <img src="man/figures/MonoLab.jpg" alt="MonoTockyLab" align="center" width="40%">
 
-**The Masahiro Ono Lab (MonoTockyLab)** offers innovative approaches to analyzing omics and flow cytometric data. The lab is particularly well-known for their development of Timer-of-cell-kinetics-and-Activity (**Tocky**) and integrated analysis of immunological data using both experiments and computational analysis.
+**The Masahiro Ono Lab (MonoTockyLab)** develops experimental and computational approaches to study immune cell dynamics, with a particular focus on the temporal regulation of gene expression in T cells.
 
-**Principal Investigator**: Dr. Masahiro Ono, Reader in Immunology at Imperial College London.
+The lab is known for the development of **Tocky** (*Timer of cell kinetics and activity*), a platform that uses Fluorescent Timer proteins to analyse transcriptional and signalling dynamics *in vivo* at single-cell resolution. Our research integrates mouse genetics, immunology, flow cytometry, single-cell omics, and computational modelling.
 
-Dr. Ono is **the creator and developer of Tocky**. He innovated the transgenic and computational technologies that constitute Tocky.
+Current research directions include:
 
-In 2008, Dr. Ono initiated his pioneering transition from molecular immunology to becoming an **Integrated Experimental and Computational Immunologist**, demonstrating his visionary leadership and pioneering spirit in the development and application of multidimensional analysis and computational methods to address experimental and immunological problems. Tocky represents one of the fusion technologies that Dr. Ono has both created and developed.
+- cancer immunology and immunotherapy
+- temporal mechanisms of T cell activation, differentiation, and tolerance
+- **Foxp3 transcriptional dynamics** and their regulation in vivo
+- computational methods for time-resolved single-cell analysis, including **CanonicalTockySeq**
 
-Tocky employs the Fluorescent Timer protein to analyze the temporal dynamics of cell activities and development *in vivo*. His lab integrates molecular biology, immunology, and computational analysis to develop novel research tools, thereby enhancing the understanding of immune cell biology.
+**Principal Investigator**: Dr Masahiro Ono, Reader in Immunology at Imperial College London.
 
-
+Dr Ono is the creator of **Tocky**, spanning both its transgenic reporter systems and associated analytical frameworks.
 
 
 

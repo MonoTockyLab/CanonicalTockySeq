@@ -33,7 +33,7 @@ plotCanonicalTocky <- function(tocky_res, gradient_res, alpha_level = 0.2) {
     cell_colors[valid_idx] <- transparent_map[idx]
   }
 
-  # --- PANEL 1: Axis 1 vs Axis 2 ---
+  #PANEL 1: Axis 1 vs 2
   par(mar = c(5, 4, 4, 1))
   
   coords_12 <- tocky_res$cell_scores[, c(1, 2)]
@@ -50,7 +50,7 @@ plotCanonicalTocky <- function(tocky_res, gradient_res, alpha_level = 0.2) {
   text(vecs_12_sc[,1]*1.2, vecs_12_sc[,2]*1.2, rownames(vecs_12),
        col="black", font=2, cex=1.0)
 
-  # --- PANEL 2: Axis 2 vs Axis 3 ---
+  #PANEL 2: Axis 2 vs 3
   coords_23 <- tocky_res$cell_scores[, c(2, 3)]
   vecs_23   <- tocky_res$biplot[, c(2, 3)]
   
@@ -65,12 +65,11 @@ plotCanonicalTocky <- function(tocky_res, gradient_res, alpha_level = 0.2) {
   text(vecs_23_sc[,1]*1.2, vecs_23_sc[,2]*1.2, rownames(vecs_23),
        col="black", font=2, cex=1.0)
 
-  # --- PANEL 3: Continuous Legend ---
+  #Legend
   par(mar = c(5, 0, 4, 2))
   plot(c(0, 1), c(0, 1), type = "n", axes = FALSE, xlab = "", ylab = "", main = "")
   title("Tocky Time", line = 1)
   
-  # Draw Transparent Gradient Bar
   legend_raster <- as.raster(matrix(rev(transparent_map), ncol=1))
   
   rasterImage(legend_raster, 0.2, 0.2, 0.3, 0.8)
@@ -113,10 +112,8 @@ plotGeneDynamics <- function(expression_data, gradient_res, gene,
                              span = 0.8, jitter_amount = 0.2,
                              pt_alpha = 0.2, m = 1.15) {
   
-  # 1. Validation & Data Alignment
   if (!gene %in% rownames(expression_data)) stop(paste("Gene", gene, "not found in expression matrix."))
   
-  # --- FLEXIBLE INPUT HANDLING ---
   if (is.data.frame(gradient_res)) {
     if (!"angle" %in% colnames(gradient_res)) stop("gradient_res data frame must contain an 'angle' column.")
     tocky_time <- gradient_res$angle
@@ -125,7 +122,6 @@ plotGeneDynamics <- function(expression_data, gradient_res, gene,
     tocky_time <- gradient_res
   }
   
-  # Find common cells
   common_cells <- intersect(colnames(expression_data), names(tocky_time))
   
   if (length(common_cells) == 0) {
@@ -145,18 +141,15 @@ plotGeneDynamics <- function(expression_data, gradient_res, gene,
     }
   }
   
-  # Extract data for common cells
   expr_values <- as.numeric(expression_data[gene, common_cells])
   times       <- as.numeric(tocky_time[common_cells])
   
-  # Filter valid timepoints (Remove NAs)
   valid_idx <- !is.na(times) & !is.na(expr_values)
   if (!is.null(groups)) valid_idx <- valid_idx & !is.na(groups)
   
   plot_x <- times[valid_idx]
   plot_y <- expr_values[valid_idx]
   
-  # --- SAFETY CHECK: EMPTY DATA ---
   if (length(plot_x) == 0) {
     plot(1, 1, type="n", xlim=c(0, 90), ylim=c(0, 1),
          xlab="Gradient Tocky Time", ylab="Expression",
@@ -165,7 +158,6 @@ plotGeneDynamics <- function(expression_data, gradient_res, gene,
     return(NULL)
   }
   
-  # Process Groups
   if (!is.null(groups)) {
     if (is.factor(groups)) {
       plot_group <- droplevels(groups[valid_idx])
@@ -178,7 +170,6 @@ plotGeneDynamics <- function(expression_data, gradient_res, gene,
     unique_groups <- NULL
   }
   
-  # 2. Color Logic
    if (is.null(plot_group)) {
     pt_colors <- rgb(0.2, 0.2, 0.2, pt_alpha)
     line_colors <- "black"
@@ -209,7 +200,6 @@ plotGeneDynamics <- function(expression_data, gradient_res, gene,
     pt_colors <- adjustcolor(pt_colors_base, alpha.f = pt_alpha)
   }
   
-  # 3. Base Plot Setup
   plot_y_jittered <- jitter(plot_y, amount = jitter_amount)
   plot_y_jittered[plot_y_jittered < 0] <- 0
   
@@ -228,12 +218,10 @@ plotGeneDynamics <- function(expression_data, gradient_res, gene,
        las = 1, xlim = c(0, 90),
        ylim = c(0, ymax))
   
-  # Background Rectangles
   rect(0, -10, 30, ymax*2,  col = rgb(0, 0, 1, 0.05), border = NA)
   rect(30, -10, 60, ymax*2, col = rgb(0.5, 0, 0.5, 0.05), border = NA)
   rect(60, -10, 90, ymax*2, col = rgb(1, 0, 0, 0.05), border = NA)
   
-  # 4. Draw LOESS Curves
   legend_text <- c()
   legend_cols_vec <- c()
   
@@ -304,7 +292,6 @@ PlotTockyHeatmap <- function(object, gradient_res, genes,
   if (!requireNamespace("pheatmap", quietly = TRUE)) stop("Please install 'pheatmap'.")
   ordering_method <- match.arg(ordering_method)
 
-  # 1. Extract Time & Data
   if (is.data.frame(gradient_res)) {
     tocky_time <- gradient_res$angle
     names(tocky_time) <- rownames(gradient_res)
@@ -318,7 +305,6 @@ PlotTockyHeatmap <- function(object, gradient_res, genes,
     counts <- object
   }
   
-  # 2. Align Cells
   common_cells <- intersect(colnames(counts), names(tocky_time))
   valid_idx <- !is.na(tocky_time[common_cells])
   cells_use <- common_cells[valid_idx]
@@ -331,7 +317,6 @@ PlotTockyHeatmap <- function(object, gradient_res, genes,
   
   expr_mat <- as.matrix(counts[valid_genes, cells_use])
   
-  # 3. Binning
   breaks <- seq(0, 90, length.out = n_bins + 1)
   bin_centers <- (breaks[1:n_bins] + breaks[2:(n_bins+1)]) / 2
   cell_bins <- cut(time_vec, breaks = breaks, labels = FALSE, include.lowest = TRUE)
@@ -353,7 +338,6 @@ PlotTockyHeatmap <- function(object, gradient_res, genes,
     }
   }
   
-  # 4. Smoothing
   smoothed_mat <- binned_mat
   if (span > 0) {
     cat("Smoothing binned trajectories...\n")
@@ -376,7 +360,6 @@ PlotTockyHeatmap <- function(object, gradient_res, genes,
     return(NULL)
   }
 
-  # 5. Scale & Order
   plot_mat <- smoothed_mat
   if (scale_rows) {
     row_means <- rowMeans(plot_mat)
@@ -386,13 +369,10 @@ PlotTockyHeatmap <- function(object, gradient_res, genes,
     plot_mat[plot_mat < -3] <- -3
   }
   
-  # --- ORDERING LOGIC ---
   if (ordering_method == "peak") {
-    # Find column index where expression is maximized
     peak_col <- apply(plot_mat, 1, which.max)
-    # Sort matrix by Peak Time (Early -> Late)
     plot_mat <- plot_mat[order(peak_col, decreasing = FALSE), ]
-    cluster_rows_flag <- FALSE # Do not cluster, use our sort order
+    cluster_rows_flag <- FALSE
     main_title <- "Tocky Cascade (Ordered by Peak Time)"
   } else {
     cluster_rows_flag <- TRUE

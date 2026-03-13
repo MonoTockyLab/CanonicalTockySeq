@@ -1,4 +1,4 @@
-# CanonicalTockySeq 0.0.1
+# CanonicalTockySeq 0.1.0.900
 
 * **Initial Public Release**: Beta release of the CanonicalTockySeq framework for single-cell transcriptomic manifold analysis.
 * **GradientTockySeq**: Implementation of piecewise Spherical Linear Interpolation (SLERP) for geodesic trajectory reconstruction.
